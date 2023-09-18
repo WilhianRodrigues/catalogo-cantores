@@ -1,0 +1,67 @@
+{% extends "template.html" %}
+{% block conteudo %}
+
+<body>
+    <!-- AQUI FICAM OS CANTORES DESTAQUES -->
+  <div class="container">
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h2 class="jumbotron-heading">DESTAQUES</h1>
+          <p class="lead text-muted">Cantores em destaque</p>
+          <div class="row">
+
+          {% for melhor in melhores %}
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" alt="Thumbnail [100%x225]" src="{{ melhor.foto_perfil }}" style="height: 225px; width: 100%; display: block;">
+              <div class="card-body">
+                <p class="card-text"><b>{{ melhor.nome }}</b></p>
+                <p class="card-text">{{ melhor.sobre }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">{{ melhor.localidade }}</small>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="btn-group">
+                    <a  class="btn btn-light" href="perfil_cantor/{{ melhor.id_cantor }}">VER</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- AQUI FICA OS CARDS DOS CANTORES -->
+      <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for cantor in cantores %}
+                <div class="col-md-4">
+                  <div class="card mb-4 shadow-sm">
+                    <img class="card-img-top" alt="Thumbnail [100%x225]" src="{{ cantor.foto_perfil }}" style="height: 225px; width: 100%; display: block;">
+                    <div class="card-body">
+                      <p class="card-text"><b>{{ cantor.nome }}</b></p>
+                      <p class="card-text">{{ cantor.sobre }}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ cantor.localidade }}</small>
+                      </div>
+                      <div class="d-flex justify-content-center align-items-center">
+                        <div class="btn-group">
+                          <a  class="btn btn-light" href="perfil_cantor/{{ cantor.id_cantor }}">VER</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+ {% endblock %}

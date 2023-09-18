@@ -1,0 +1,57 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<div class="container">
+  <a href="/perfil_cantor">voltar</a>
+<div><br></div>
+  <form action="/editar_perfil_cantor" method="post">
+    {% for cantor in cantor %}
+    <div class="form-row">
+      <div class="col-3">
+        <label for="formGroupExampleInput">Nome</label>
+        <input type="text" name="nome" value="{{cantor.nome}}" placeholder="Nome" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Idade</label>
+        <input type="text" name="idade" value="{{cantor.idade}}" placeholder="Idade" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Localidade</label>
+        <input type="text" name="localidade" value="{{cantor.localidade}}" placeholder="Localidade" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Celular</label>
+        <input type="text" name="celular" value="{{cantor.celular}}" placeholder="Celular" class="form-control">
+      </div>
+      <div class="col-12"><br></div>
+      <div class="col-12">
+        <label for="formGroupExampleInput">Link da IMAGEM</label>
+        <input type="text" name="foto_perfil" value="{{cantor.foto_perfil}}" placeholder="foto_perfil" class="form-control">
+      </div>
+      <div class="col-12"><br></div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Email</label>
+        <input type="text" name="email" value="{{cantor.email}}" placeholder="Email" class="form-control">
+      </div>
+    <div class="col-6">
+      <label for="formGroupExampleInput">Disponíbilidade (segunda, terça, sexta)</label>
+      <input type="text" name="disponibilidade" value="{{cantor.disponibilidade}}" placeholder="Disponibilidade" class="form-control">
+    </div>
+    <div class="col-3">
+      <label for="formGroupExampleInput">Valor médio (50)</label>
+      <input type="text" name="valor_medio" value="{{cantor.valor_medio}}" placeholder="Valor medio de contratação" class="form-control">
+    </div>
+    <div class="col-12"><br></div>
+    <div class="col-3"><br></div>
+    <div class="form-group col-6">
+      <label for="exampleFormControlTextarea1">Sobre</label>
+      <textarea class="form-control" name="sobre" rows="3"></textarea>
+    </div>
+    {% endfor %}
+    
+    <div class="col-4"><br></div>
+    <div class="col-4"><button type="submit" class="btn btn-block btn-sucess">Enviar</button></div>
+  </div>
+</form>
+
+</div>
+{% endblock %}

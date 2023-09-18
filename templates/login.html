@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.83.1">
+    <title>Login</title>
+
+    <link rel="canonical" href="../static/signin.css">
+
+    
+
+    <!-- Bootstrap core CSS -->
+  <link href="../static/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../static/signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+  <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    
+<main class="form-signin">
+    <h1 class="h3 mb-3 fw-normal">Faça seu login</h1>
+	<form method="POST" action="{{ url_for('autenticar') }}">
+    <input type="hidden" name="proxima" value="{{ proxima or url_for('index') }}">	
+
+    <div class="form-floating">
+        <input class="form-control" type="text" id="floatingInput" name="login" required>
+      <label for="floatingInput">Nome de Usuário</label>
+    <div class="form-floating">
+        <input class="form-control" type="password" id="floatingPassword" name="senha" required>
+      <label for="floatingPassword">Senha</label>  
+    </div>
+
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+  </form>
+   <p> <button class="w-100 btn btn-danger" type="submit">Entrar</button> </p>
+		   <p>  <a href="/cadastrar" button class="w-100 btn btn-danger" type="submit">Cadastrar</a>  </p>
+      <p class="mt-5 mb-3 text-muted">&copy; 2022–2026</p>
+  
+</main>
+</div>
+ </body>
+</html>

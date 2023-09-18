@@ -1,0 +1,46 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<div><br></div>
+<div class="container">
+  <form action="/editar_perfil_contratante" method="post">
+    {% for contratante in contratante %}
+    <div class="form-row">
+      <div class="col-3">
+        <label for="formGroupExampleInput">Nome</label>
+        <input type="text" name="nome" value="{{contratante.nome}}" placeholder="Nome" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Localidade</label>
+        <input type="text" name="localidade" value="{{contratante.localidade}}" placeholder="Localidade" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Celular</label>
+        <input type="text" name="celular" value="{{contratante.celular}}" placeholder="Celular" class="form-control">
+      </div>
+      <div class="col-3">
+        <label for="formGroupExampleInput">Email</label>
+        <input type="text" name="email" value="{{contratante.email}}" placeholder="Email" class="form-control">
+      </div>
+      <div class="col-12"><br></div>
+      <div class="col-12">
+        <label for="formGroupExampleInput">Link da IMAGEM</label>
+        <input type="text" name="foto_perfil" value="{{contratante.foto_perfil}}" placeholder="foto_perfil" class="form-control">
+      </div>
+    <div class="col-12"><br></div>
+    <div class="col-3"><br></div>
+    <div class="form-group col-6">
+      <label for="exampleFormControlTextarea1">Sobre</label>
+      <textarea class="form-control" name="sobre" rows="3"></textarea>
+    </div>
+    {% endfor %}
+    
+    <div class="col-4"><br></div>
+    <div class="col-4"><button type="submit" class="btn btn-block btn-sucess">Enviar</button></div>
+    <div class="col-4"><br></div>
+    <div class="col-11"><br></div>
+    <div class="col-1"><a href="/perfil_contratante">voltar</a></div>
+
+  </div>
+</form>
+
+{% endblock %}

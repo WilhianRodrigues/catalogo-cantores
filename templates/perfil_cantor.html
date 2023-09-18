@@ -1,0 +1,43 @@
+{% extends "template.html" %}
+{% block conteudo %}
+{% for e in cantor %}
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-3 py-4">
+                <div class="text-center">
+                    <img src="{{e.foto_perfil}}" width="100" class="rounded-circle">
+                </div>
+                <div class="text-center mt-3">
+                    <span class="bg-secondary p-1 px-4 rounded text-white">{{valor_notas}}</span>
+                    <h5 class="mt-2 mb-0">{{e.nome}}</h5>
+                    <span>{{e.localidade}} | {{e.idade}} anos</span>
+                    <div class="px-4 mt-1">
+                        <p class="fonts">{{e.sobre}}</p>
+                    </div>
+                    <div class="px-4 mt-1">
+                        <p class="">{{e.disponibilidade}} <br> Email: {{e.email}} <br> Celular: {{e.celular}} </p>
+                        <p>Valor: {{e.valor_medio}} </p>
+                    </div>
+                </div>
+
+                <form method="POST" action="">
+                    <p> <select name="nota" required>
+                            <option value="5">Sensacional</option>
+                            <option value="4">Ótimo</option>
+                            <option value="3">Bom</option>
+                            <option value="2">Medio</option>
+                            <option value="1">Ruím</option>
+                        </select></p>
+                    <button class="btn btn-danger" type="submit">Avaliar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+
+{% endblock %}
