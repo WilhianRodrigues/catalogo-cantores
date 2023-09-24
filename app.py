@@ -4,9 +4,10 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/cante'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/cante'
 app.secret_key = 'secreta'
 db = SQLAlchemy(app)
+
 class Usuario(db.Model):
     __usuario__ = "usuario"
     id_usuario = db.Column(db.Integer, primary_key=True)
@@ -75,6 +76,7 @@ class Contratante(db.Model):
 
 @app.route('/')
 def index():
+    db.create_all()
     return redirect(url_for('login'))
 
 # aqui é referente ao catalogo
@@ -242,7 +244,7 @@ def cadastrar():
                 db.session.commit()
 
             if request.form['tipo'] == 'contratante':
-                cantor = Contratante('Foto perfil.txt', request.form['login'], 'localidade', '61 0000-0000', 'email@email.com', 5, 'sobre', id_usuario)
+                contratante = Contratante('Foto perfil.txt', request.form['login'], 'localidade', '61 0000-0000', 'email@email.com', 5, 'sobre', id_usuario)
                 db.session.add(cantor)
                 db.session.commit()
             flash('Usuário cadastrado com sucesso!')
