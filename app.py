@@ -4,7 +4,7 @@ from sqlalchemy import and_
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/cante'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/cante'
 app.secret_key = 'secreta'
 db = SQLAlchemy(app)
 
@@ -15,6 +15,12 @@ class Usuario(db.Model):
     senha = db.Column(db.String(255))
     tipo = db.Column(db.String(255))
     email = db.Column(db.String(255))
+
+    # Relacionamento com Cantor
+    cantor = db.relationship('Cantor', backref='usuario', uselist=False)
+
+    # Relacionamento com Contratante
+    contratante = db.relationship('Contratante', backref='usuario', uselist=False)
 
     def __init__(self, login, senha, tipo, email):
         self.login = login
@@ -37,6 +43,7 @@ class Cantor(db.Model):
     sobre = db.Column(db.String(255))
     qnt_nota = db.Column(db.Float)
     id_usuario = db.Column(db.Integer)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id_usuario'), unique=True)
 
     def __init__(self, foto_perfil, nome, idade, localidade, celular, email, disponibilidade, nota, valor_medio, sobre, qnt_nota, id_usuario):
         self.foto_perfil = foto_perfil
@@ -63,6 +70,7 @@ class Contratante(db.Model):
     nota = db.Column(db.Float)
     sobre = db.Column(db.String(255))
     id_usuario = db.Column(db.Integer)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id_usuario'), unique=True)
 
     def __init__(self, foto_perfil, nome, localidade, celular, email, nota, sobre, id_usuario):
         self.foto_perfil = foto_perfil
@@ -223,37 +231,33 @@ def login():
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
     if request.method == 'POST':
-        cadastro = Usuario(request.form['login'], request.form['senha'],
-                            request.form['tipo'], request.form['email']) 
         try:
             cadastro = Usuario(request.form['login'], request.form['senha'],
                             request.form['tipo'], request.form['email'])
             db.session.add(cadastro)
             db.session.commit()
+
             login = request.form['login']
-            usuario = Usuario.query.filter(
-                Usuario.login == login).all()
-            for e in usuario:
-                id_usuario = (e.id_usuario)
+            usuario = Usuario.query.filter(Usuario.login == login).first()
 
             if request.form['tipo'] == 'cantor':
-                cantor = Cantor('Foto perfil.txt', request.form['login'], 45, 'Brasilia', '00 0000-0000', request.form['email'], 'todos', 5, 50.2, 'sobre', 0, id_usuario)
-                cantor.qnt_nota = 1
-                print(cantor.qnt_nota)
+                cantor = Cantor('Foto perfil.txt', request.form['login'], 45, 'Brasilia', '00 0000-0000', request.form['email'], 'todos', 5, 50.2, 'sobre', 1, usuario.id_usuario)
                 db.session.add(cantor)
                 db.session.commit()
 
             if request.form['tipo'] == 'contratante':
-                contratante = Contratante('Foto perfil.txt', request.form['login'], 'localidade', '61 0000-0000', 'email@email.com', 5, 'sobre', id_usuario)
-                db.session.add(cantor)
+                contratante = Contratante('Foto perfil.txt', request.form['login'], 'localidade', '61 0000-0000', request.form['email'], 5, 'sobre', usuario.id_usuario)
+                db.session.add(contratante)
                 db.session.commit()
+
             flash('Usuário cadastrado com sucesso!')
             return redirect('/login')
-        except:
-            flash('este usuário já existe')
+        except Exception as e:
+            flash(f'Ocorreu um erro ao cadastrar: {str(e)}')
+
     return render_template('cadastrar.html')
 
-@app.route('/autenticar', methods=['POST', ])
+@app.route('/autenticar', methods=['POST'])
 def autenticar():
     if request.method == 'POST':
         try:
@@ -261,20 +265,19 @@ def autenticar():
             senha = request.form['senha']
             usuario = Usuario.query.filter(and_(
                 Usuario.login == login,
-                Usuario.senha == senha)).all()
+                Usuario.senha == senha)).first()
 
-            if usuario:
-                for e in usuario:
-                    id_usuario = (e.id_usuario)
-
-                session['usuario_logado'] = id_usuario
-                flash(login + ' logou com sucesso!')
+            if usuario is not None:
+                session['usuario_logado'] = usuario.id_usuario
+                flash(f'{login} logou com sucesso!')
                 return redirect('/catalogo')
             else:
-                flash("Usuario ou senha errada")
-        except:
-            flash("Usuario ou senha errada123")
-    return render_template("login.html", id_usuario=id_usuario)
+                flash("Usuário ou senha incorretos")
+        except Exception as e:
+            flash(f"Ocorreu um erro ao autenticar: {str(e)}")
+
+    return render_template("login.html")
+
 
 @app.route('/logout')
 def logout():
@@ -283,5 +286,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    db.create_all()
+    # db.create_all()
     app.run(debug=True)
