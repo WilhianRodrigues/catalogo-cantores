@@ -111,12 +111,13 @@ def catalogo_cantor(id_cantor):
 
     for e in cantor:  
         if request.method == 'POST':
-            e.nota = (e.nota + float(request.form['nota']))
-            e.qnt_nota = e.qnt_nota + 1
+            e.nota = (e.nota or 0) + float(request.form['nota'])
+            e.qnt_nota = (e.qnt_nota or 0) + 1
             db.session.commit()
 
-        valor_notas = (e.nota / e.qnt_nota)
+        valor_notas = (e.nota or 0) / (e.qnt_nota or 1)
         valor_notas = round(valor_notas, 2)
+
 
     return render_template('perfil_cantor.html', cantor=cantor, valor_notas=valor_notas)
 
@@ -168,7 +169,7 @@ def editar_perfil_cantor():
 
             return render_template('index')
 
-    cantor_edit = Cantor.query.get(1)
+    cantor_edit = Cantor.query.filter(Cantor.id_usuario == session['usuario_logado']).first()
 
     if request.method == 'POST':
         cantor_edit.nome = request.form['nome']
@@ -206,7 +207,8 @@ def editar_perfil_contratante():
         Contratante.id_usuario == session['usuario_logado']
     ).all()
 
-    contratante_edit = Contratante.query.get(1)
+    contratante_edit = Contratante.query.filter(Contratante.id_usuario == session['usuario_logado']).first()
+
 
     if request.method == 'POST':
         contratante_edit.nome = request.form['nome']
@@ -257,19 +259,24 @@ def cadastrar():
 
     return render_template('cadastrar.html')
 
+from sqlalchemy import or_
+
 @app.route('/autenticar', methods=['POST'])
 def autenticar():
     if request.method == 'POST':
         try:
             login = request.form['login']
             senha = request.form['senha']
-            usuario = Usuario.query.filter(and_(
-                Usuario.login == login,
-                Usuario.senha == senha)).first()
 
-            if usuario is not None:
+            # Verifica se o login é um nome de usuário OU um email
+            usuario = Usuario.query.filter(or_(
+                Usuario.login == login,
+                Usuario.email == login
+            )).first()
+
+            if usuario is not None and usuario.senha == senha:
                 session['usuario_logado'] = usuario.id_usuario
-                flash(f'{login} logou com sucesso!')
+                flash(f'{usuario.login} logou com sucesso!')
                 return redirect('/catalogo')
             else:
                 flash("Usuário ou senha incorretos")
